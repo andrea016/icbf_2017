@@ -1,0 +1,173 @@
+
+<html>
+<head>
+{% load static from staticfiles %}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MEDIDAS ANTROPOMETRICAS</title>
+<link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+<link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+<style>
+.negrita{
+  font-weight: bold;
+}
+.container{
+  margin-left: 200%;
+  margin-right: 200%;
+  text-align: justify;
+  font-size: 14px;
+  margin-top: 40px;
+  margin-bottom: 500px
+}
+@page {
+  @frame {
+      -pdf-frame-content: company_logo;
+      /*-pdf-frame-border: 1;*/
+      left: 1.5cm;
+      right: 2cm;
+      width: 5cm;
+      top: 1.5cm;
+      height: 1.5cm;
+  }
+  size: a4 portrait;
+  @frame header_frame {
+  -pdf-frame-content: header_content;
+  left: 1cm;
+  right: 1cm;
+  width: 19cm;
+  top: 1.3cm;
+  bottom: 1cm;
+  height: 40pt;
+  }
+  @frame content_frame {
+    left: 1cm;
+    right: 1cm;
+    top: 50pt;
+    bottom: 4cm;
+  }
+  @frame footer_frame {
+  -pdf-frame-content: footer_content;
+    /*-pdf-frame-border: 1;*/
+    right: 1cm;
+    width: 512pt;
+    bottom: 1.5cm;
+    height: 0.6cm;
+  }
+  @frame footer_frame {
+  -pdf-frame-content: razon_social;
+    left: 5cm;
+    right: 5cm;
+    bottom: 1.5cm;
+    width: 10cm;
+    height: 0.6cm;
+  }
+  @frame footer_frame {
+  -pdf-frame-content: footer_sucursal;
+    left: 2cm;
+    right: 2cm;
+    bottom: 1cm;
+    width: 20cm;
+    height: 0.6cm;
+  }
+}
+
+.reporte{
+  border-collapse: collapse;
+  border: 1px solid black;
+  width: 100%;
+}
+
+.td_reporte{
+  text-align: center;
+  font-size: 12px;
+  padding: 2px;
+  padding-top: 10px;
+}
+
+.tr_primera{
+  background-color: #f2f2f2;
+}
+</style>
+</head>
+<body>
+<div id="company_logo">
+    <img src="{{ url }}{{ logo }}" alt="" class="top_image" />
+</div>
+<div id="header_content">
+</div>
+<div id="footer_content" align="right">Pagina <pdf:pagenumber>
+de <pdf:pagecount>
+</div>
+
+<!--
+<div style="color: #333; font-size: 12px" id="razon_social">
+  <span>Razón Social: INMOBILIARIA PLATINUM S.A.C | RUC: 20539034449</span>
+</div>
+<div style="color: #333; font-size: 12px" id="footer_sucursal">
+  <span>Av. Caminos del Inca 1603 Of. 202, Urb. Las Gardenias - Surco. | lima@remaxplatinum.pe | www.remaxplatinum.pe</span>
+</div>
+<p align="center" style="font-size: 17px">
+    <strong>REPORTE MEDIDAS ANTROPOMETRICAS</strong><br>
+    <strong>{{ beneficiario.primer_nombre }} {{ beneficiario.segundo_nombre }} {{ beneficiario.primer_apellido }} {{ beneficiario.segundo_nombre }}</strong>
+</p>
+-->
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <th></th>
+      <th></th>
+    </tr>
+    <tr>
+      <td>
+        <div style="font-family: arial,sans-serif; font-size: 14px; color: #333;">
+          <strong>Unidad de Servicio:</strong><span> {{ beneficiario.uds }}</span>
+        </div>
+        <div style="font-family: arial,sans-serif; font-size: 14px; color: #333;">
+          <strong>Tipo Beneficiario:</strong><span> {{ tipo }}</span>
+        </div>
+        <div style="font-family: arial,sans-serif; font-size: 14px; color: #333;">
+          <strong>Tipo Documento:</strong><span> {{ beneficiario.tipo_documento }}</span>
+        </div>
+        <div style="font-family: arial,sans-serif; font-size: 14px; color: #333;">
+          <strong>Numero Documento:</strong><span> {{ beneficiario.numero_documento }}</span>
+        </div>
+        <div style="font-family: arial,sans-serif; font-size: 14px; color: #333;">
+          <strong>Edad :</strong><span> {{ beneficiario.edad }} Años</span>
+        </div>
+        <div style="font-family: arial,sans-serif; font-size: 14px; color: #333;">
+          <strong>Fecha de Afiliación :</strong><span> {{ beneficiario.fecha_afiliacion }}</span>
+        </div>
+      </td>
+      <td align="center" style="padding: 0 10px;">
+          <img src="{{ url }}{{ beneficiario.foto }}" width="150" alt="" style="display: block;" />
+      </td>
+    </tr>
+  </table>
+</div>
+<br><br><br>
+</div>
+  {% if controles.count >= 1  %}
+  <tbody>
+    <div style="overflow-x:auto;">
+      <table style="width:100%" class="reporte">
+        <tr style="padding: 5px; font-size: 12px;">
+          <th><strong>Nº ORDEN</strong></th>
+          <th><strong>FECHA</strong></th>
+          <th><strong>EDAD</strong></th>
+          <th><strong>PESO</strong></th>
+          <th><strong>TALLA</strong></th>
+        </tr>
+        {% for control in controles %}
+          <tr>
+            <td class="td_reporte">{{ control.numero_orden }}</td>
+            <td class="td_reporte">{{ control.fecha_control }}</td>
+            <td class="td_reporte">{{ control.edad_anios }} AÑOS</td>
+            <td class="td_reporte">{{ control.peso_kilos }},{{ control.peso_gramos }}</td>
+            <td class="td_reporte">{{ control.talla }} CMS</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </tbody>
+  {% endif %}
+</table>

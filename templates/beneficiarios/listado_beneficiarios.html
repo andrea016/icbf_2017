@@ -1,0 +1,169 @@
+{% extends 'menu.html' %}
+{% block content %}
+{% load static from staticfiles %}
+{% if messages %}
+    {% for message in messages %}
+				<script>
+					if ("{{ message }}" == "Creado"){
+						$( document ).ready(function() {
+							mensagesSuccess("EXITO AL GUARDAR","Beneficiario","Creado Exitosamente.");
+						});
+					}
+					if ("{{ message }}" == "Actualizado"){
+						$( document ).ready(function() {
+							mensagesSuccess("EXITO AL EDITAR","Información del Beneficiario","Actualizada Exitosamente.");
+						});
+					}
+					if ("{{ message }}" == "Borrado"){
+						$( document ).ready(function() {
+							mensagesSuccess("EXITO AL BORRAR","Beneficiario","Borrado Exitosamente.");
+						});
+					}
+					if ("{{ message }}" == "Caracteristicas"){
+						$( document ).ready(function() {
+							mensagesSuccess("EXITO AL GUARDAR","Catacteristicas de Vivienda","Actualizadas Exitosamente.");
+						});
+					}
+					if ("{{ message }}" == "Cabeza"){
+						$( document ).ready(function() {
+							mensagesSuccess("EXITO AL GUARDAR","Cabeza de Nucleo","Actualizada Exitosamente.");
+						});
+					}
+					if ("{{ message }}" == "Relaciones"){
+						$( document ).ready(function() {
+							mensagesSuccess("EXITO AL GUARDAR","Relaciones Comunitarias","Actualizadas Exitosamente.");
+						});
+					}
+          if ("{{ message }}" == "Nutricion"){
+						$( document ).ready(function() {
+							mensagesSuccess("EXITO AL GUARDAR","Nutrición","Actualizada Exitosamente.");
+						});
+					}
+          if ("{{ message }}" == "Salud"){
+						$( document ).ready(function() {
+							mensagesSuccess("EXITO AL GUARDAR","Salud","Actualizada Exitosamente.");
+						});
+					}
+				</script>
+    {% endfor %}
+{% endif %}
+<div class="page-header ">
+    <div class="page-header-content">
+      <div class="page-title">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12"></div>
+          <div class="col-xs-12 col-sm-12 col-md-6">
+              <h4><span id="titulo_breadcrumb" class="no-margin text-bold">LISTADO DE BENEFICIARIOS</span></h4>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-6">
+            <div class="breadcrumb container">
+               <ul id="breadcrumb">
+                 <li>
+                   <a href="{% url 'beneficiarios:crearBeneficiario' %}">
+                     <button class="btn btn bg-warning-800 btn-labeled heading-btn" type="button"><b><i class=" icon-user-plus"></i></b>&nbsp;&nbsp;CREAR BENEFICIARIO&nbsp;&nbsp;</button>
+                   </a>
+                 </li>
+               </ul>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-12"></div>
+        </div>
+      </div>
+    </div>
+    <div class="breadcrumb-line">
+      <ul class="breadcrumb">
+          <li><a href="{% url 'login:panel' %}"><i class="icon-meter-fast position-left"></i>Panel Administrativo</a></li>
+          <li class="active">Beneficiarios</a></li>
+      </ul>
+    </div>
+</div>
+<div class="content">
+	<div class="panel panel-flat">
+		<table class="table datatable-responsive">
+			<thead>
+				<tr>
+        	<th class="text-center">UDS</th>
+          <th class="text-center">TIPO</th>
+          <th class="text-center">BENEFICIARIO</th>
+          <th class="text-center">TIPO DOCUMENTO</th>
+					<th class="text-center">NUMERO</th>
+          <th class="text-center">EDAD</th>
+          <th class="text-center">GENERO</th>
+          <th class="text-center">REPORTES</th>
+					<th class="text-center">ACCIONES</th>
+				</tr>
+			</thead>
+			<tbody>
+      {% if beneficiarios.count >= 1  %}
+        {% for beneficiario in beneficiarios %}
+        <script>
+          var listB = [];
+          var listC = [];
+          var listG = [];
+        </script>
+        <tr>
+          <td class="text-center">{{ beneficiario.uds }}</td>
+          <td class="text-center"><span id="t{{ beneficiario.id }}">{{ beneficiario.tipo_beneficiario }}</span></td>
+          <script>
+          if ("{{ beneficiario.tipo_beneficiario }}" == "1"){
+              VerificarArray("t{{ beneficiario.id }}",listB);
+              RemplazarTexto(listB,"Niño")
+          }
+          if ("{{ beneficiario.tipo_beneficiario }}" == "2"){
+              VerificarArray("t{{ beneficiario.id }}",listB);
+              RemplazarTexto(listB,"Niña")
+          }
+          </script>
+          <td class="text-center">{{ beneficiario.primer_nombre }} {{ beneficiario.segundo_nombre }}<br>{{ beneficiario.primer_apellido }} {{ beneficiario.segundo_apellido }}</td>
+          <td class="text-center">{{ beneficiario.tipo_documento }}</td>
+          <td class="text-center">{{ beneficiario.numero_documento }}</td>
+          <td class="text-center">{{ beneficiario.edad }}</td>
+          <td class="text-center"><span id="g{{ beneficiario.id }}">{{ beneficiario.genero }}</span></td>
+          <script>
+          if ("{{ beneficiario.genero }}" == "M"){
+              VerificarArray("g{{ beneficiario.id }}",listG);
+              RemplazarTexto(listG,"Masculino")
+          }
+          if ("{{ beneficiario.genero }}" == "F"){
+              VerificarArray("g{{ beneficiario.id }}",listG);
+              RemplazarTexto(listG,"Femenino")
+          }
+          </script>
+          <td style="text-align: center;">
+            <ul class="icons-list">
+              <li class="text-bg-grey-600"><a href="{{ servidor }}/beneficiarios/medidas_antropometricas/{{ beneficiario.id }}/reporte" target="_blank" data-popup="tooltip" title="MEDIDAS ANTROPOMETRICAS" data-placement="top" data-original-title="MEDIDAS ANTROPOMETRICAS"><i class="icon-file-pdf"></i>&nbsp;&nbsp;&nbsp;</a></li>
+              <li class="text-bg-grey-600"><a href="{{ servidor }}/agentes/codigoEtica/{{ agente.id_id }}" target="_blank" data-popup="tooltip" title="SALUD" data-placement="top" data-original-title="SALUD"><i class="icon-file-pdf"></i>&nbsp;&nbsp;&nbsp;</a></li>
+              <li class="text-bg-grey-600"><a href="{{ servidor }}/agentes/declaracionCompromiso/{{ agente.id_id }}" target="_blank" data-popup="tooltip" title="ENFERMEDADES" data-placement="top" data-original-title="ENFERMEDADES"><i class="icon-file-pdf"></i>&nbsp;&nbsp;&nbsp;</a></li>
+              <li class="text-bg-grey-600"><a href="{{ servidor }}/agentes/declaracionCompromiso/{{ agente.id_id }}" target="_blank" data-popup="tooltip" title="DATOS ETNICOS" data-placement="top" data-original-title="DATOS ETNICOS"><i class="icon-file-pdf"></i>&nbsp;&nbsp;&nbsp;</a></li>
+            </ul>
+          </td>
+          <td class="text-center">
+            <ul class="icons-list">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <i class="icon-menu9"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li><a href="{% url 'beneficiarios:editarBeneficiario' beneficiario.id %}"><i class="icon-pencil7"></i>Editar Beneficiario</a></li>
+                        <li><a onclick='eliminar("beneficiario/eliminar/","{{ beneficiario.id }}","Eliminando Beneficiario por favor espere ....")'><i class="icon-bin"></i>Eliminar Beneficiario</a></li>
+                        <li><a onclick='eliminar("beneficiario/eliminar/","{{ beneficiario.id }}","Eliminando Producto por favor espere ....")'><i class="icon-file-pdf"></i>Reporte del Beneficiario</a></li>
+                    </ul>
+                </li>
+            </ul>
+          </td>
+				</tr>
+        {% endfor %}
+			</tbody>
+		</table>
+    {% endif %}
+	</div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript" src="{% static 'assets/js/plugins/tables/datatables/datatables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/tables/datatables/extensions/responsive.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/datatables_responsive.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/ui/prism.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/extension_blockui.js' %}"></script>
+{% endblock %}
